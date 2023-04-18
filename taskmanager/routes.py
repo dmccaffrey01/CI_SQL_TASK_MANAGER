@@ -5,7 +5,8 @@ from taskmanager.models import Category, Task
 
 @app.route("/")
 def home():
-    return render_template("tasks.html")
+    tasks = list(Task.query.order_by(Task.task_name).all())
+    return render_template("tasks.html", tasks=tasks)
 
 
 @app.route("/categories")
@@ -41,6 +42,7 @@ def delete_category(category_id):
     db.session.commit()
     return redirect(url_for("categories"))
 
+
 @app.route("/add_task", methods=["GET", "POST"])
 def add_task():
     categories = list(Category.query.order_by(Category.category_name).all())
@@ -50,7 +52,8 @@ def add_task():
             task_description=request.form.get("task_description"),
             is_urgent=bool(True if request.form.get("is_urgent") else False),
             due_date=request.form.get("due_date"),
-            category_id=request.form.get("category_id")
+            category_id=request.form.get("category_id"),
+            category=Category.query.get_or_404(category_id)
         )
         db.session.add(task)
         db.session.commit()

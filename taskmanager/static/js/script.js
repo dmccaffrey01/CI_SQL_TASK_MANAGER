@@ -6,5 +6,6 @@ $(document).ready(function(){
         i18n: {done: "Select"}
     });
     $('select').formSelect();
+    $('.collapsible').collapsible();
 });
 
